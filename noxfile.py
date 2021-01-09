@@ -27,15 +27,15 @@ def reformat(session: nox.Session):
         )
 
 
-@nox.session(python=['3.7', '3.8', '3.9'])
+@nox.session(python=['3.7', '3.8', '3.9', '3.10'])
 def test(session: nox.Session):
     "Run the test suite."
-    session.install('.[server, test]', './tests/plugin')
+    session.install('--ignore-requires-python', '.[server, test]', './tests/plugin')
     session.run('coverage', 'run', '-m', 'pytest')
     session.run('coverage', 'report', '-m')
 
 
-@nox.session(python=['3.7', '3.8', '3.9'])
+@nox.session(python=['3.7', '3.8', '3.9', '3.10'])
 def type_check(session: nox.Session):
     "Run Pyright."
     # The instawow path is hardcoded in pyrightconfig.json relative
@@ -50,6 +50,7 @@ def type_check(session: nox.Session):
     session.run('git', 'clone', '.', tmp_dir)
     session.chdir(tmp_dir)
     session.install(
+        '--ignore-requires-python',
         '-e',
         '.[server]',
         'sqlalchemy-stubs@ https://github.com/layday/sqlalchemy-stubs/archive/develop.zip',
